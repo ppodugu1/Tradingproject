@@ -22,7 +22,7 @@ jobs:
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: "trader-dashboard-vunathicapital"
+          app-name: "trading-dashboard-as"
           slot-name: "production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: trader-dashboard/build
