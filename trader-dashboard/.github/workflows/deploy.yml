@@ -21,15 +21,18 @@ jobs:
       run: |
         az acr login --name ${{ secrets.ACR_NAME }}
 
+    # ✅ FIX: Move into frontend folder
     - name: Build and Push Frontend Image
       run: |
+        cd trader-dashboard
         docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/frontend:latest .
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/frontend:latest
 
+    # ✅ FIX: Correct AKS name
     - name: Get AKS Credentials
       run: |
-        az aks get-credentials --resource-group TRP --name myAKScluster --overwrite-existing
+        az aks get-credentials --resource-group TRP --name Trading --overwrite-existing
 
     - name: Deploy Frontend to AKS
       run: |
-        kubectl apply -f k8s/frontend.yaml
+        kubectl apply -f k8s/
