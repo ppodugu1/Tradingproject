@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: frontend
 spec:
-  replicas: 2
+  replicas: 1   # ✅ change from 2 to 1 (you have 1 node)
   selector:
     matchLabels:
       app: frontend
