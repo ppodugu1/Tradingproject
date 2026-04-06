@@ -2,7 +2,7 @@ name: Frontend CI/CD to AKS
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build-and-deploy:
