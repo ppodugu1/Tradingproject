@@ -1,0 +1,38 @@
+name: Frontend CI/CD to AKS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Login to ACR
+      run: |
+        az acr login --name ${{ secrets.ACR_NAME }}
+
+    # ✅ FIX: Move into frontend folder
+    - name: Build and Push Frontend Image
+      run: |
+        cd trader-dashboard
+        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/frontend:latest .
+        docker push ${{ secrets.ACR_NAME }}.azurecr.io/frontend:latest
+
+    # ✅ FIX: Correct AKS name
+    - name: Get AKS Credentials
+      run: |
+        az aks get-credentials --resource-group TRP --name Trading --overwrite-existing
+
+    - name: Deploy Frontend to AKS
+      run: |
+        kubectl apply -f k8s/
